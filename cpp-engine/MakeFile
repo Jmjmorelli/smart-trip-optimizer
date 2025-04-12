@@ -1,0 +1,22 @@
+# cpp-engine/Makefile
+
+# Compiler to use
+CXX = g++
+# Compiler flags (adjust as necessary for your project)
+CXXFLAGS = -std=c++11 -Wall
+# Target executable
+TARGET = engine
+
+# Sources and object files
+SRC = $(wildcard src/*.cpp)
+OBJ = $(SRC:.cpp=.o)
+
+# Default target to build the executable
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+    $(CXX) $(CXXFLAGS) -o $@ $^
+
+# Clean up generated files
+clean:
+    rm -f $(TARGET) $(OBJ)
