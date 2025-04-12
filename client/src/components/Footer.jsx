@@ -6,7 +6,7 @@ export default function Footer() {
             
             <div className="text-center">
                     <h5>
-                        winnable
+                        OdesseyGODEEZNUTS
                     </h5>
             </div> 
 
