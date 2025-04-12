@@ -5,6 +5,7 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const FormDataModel = require ('./routes/models/FormData');
+const User = require('./routes/models/User');
 
 
 const app = express();
@@ -19,44 +20,46 @@ mongoose.connect(process.env.mongoURI, {
 .catch(err => console.log(err));
 
 
-app.post('/register', (req, res)=>{
-    // To post / insert data into database
+app.post('/register', async (req, res)=>{
 
-    const {email, password} = req.body;
-    FormDataModel.findOne({email: email})
-    .then(user => {
-        if(user){
-            res.json("Already registered")
-        }
-        else{
-            FormDataModel.create(req.body)
-            .then(log_reg_form => res.json(log_reg_form))
-            .catch(err => res.json(err))
-        }
-    })
+    const { name, email, password} = req.body;
     
+    try{
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User found with that email'});
+        }
+
+        const newUser = new User({ name, email, password});
+        await newUser.save();
+
+        res.status(201).json({ message: 'User registered succcessfully'});
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message});
+    }
 })
 
-app.post('/login', (req, res)=>{
-    // To find record from the database
-    const {email, password} = req.body;
-    FormDataModel.findOne({email: email})
-    .then(user => {
-        if(user){
-            // If user found then these 2 cases
-            if(user.password === password) {
-                res.json("Success");
-            }
-            else{
-                res.json("Wrong password");
-            }
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        // If user not found then 
-        else{
-            res.json("No records found! ");
+
+        if (user.password !== password) {
+            return res.status(400).json({ message: 'Incorrect password' });
         }
-    })
-})
+
+        res.status(200).json({ message: 'Login successful' });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 app.listen(3001, () => {
     console.log("Server listining on http://127.0.0.1:3001");

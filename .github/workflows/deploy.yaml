@@ -1,0 +1,40 @@
+name: Deploy to AWS Lightsail
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: SSH into AWS Lightsail and Deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.AWS_LIGHTSAIL_IP }}
+        username: ubuntu
+        key: ${{ secrets.AWS_LIGHTSAIL_SSH_KEY }}
+        script: |
+          cd ~/tripOptimizer/smart-trip-optimizer
+          git pull
+
+          # Restart backend
+          cd server
+          pm2 restart index
+
+          # Rebuild frontend
+          cd ../client
+          npm install
+          npm run build
+
+          # Deploy frontend to NGINX
+          sudo rm -rf /var/www/html/*
+          sudo cp -r dist/* /var/www/html/
+
+          # Restart nginx
+          sudo systemctl restart nginx
