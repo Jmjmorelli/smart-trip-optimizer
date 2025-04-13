@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MapPin, Calendar, Clock, DollarSign, RotateCcw } from "lucide-react";
 import API from "../axiosConfig";
-import MapGL, { Marker, Popup } from "react-map-gl";
+import MapGL, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const HomePage = () => {
