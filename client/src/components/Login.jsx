@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const [email, setEmail] = useState();
@@ -16,12 +17,16 @@ const Login = () => {
         .then(result => {
             console.log(result);
             if(result.data === "Success"){
-                console.log("Login Success");
-                alert('Login successful!')
-                navigate('/home');
+                toast.success('🎉 Login successful!', {
+                    position: "top-center",
+                    theme: "colored"
+                  });
             }
             else{
-                alert('Incorrect password! Please try again.');
+                toast.error('❌ Invalid credentials!', {
+                    position: "top-center",
+                    theme: "colored"
+                  });
             }
         })
         .catch(err => console.log(err));
