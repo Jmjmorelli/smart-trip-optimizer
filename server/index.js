@@ -1,64 +1,64 @@
-require('dotenv').config();
-console.log("Mongo URI:", process.env.mongoURI);  // TEMP for testing
-
-const cors = require('cors');
-const express = require('express');
-const mongoose = require('mongoose');
-const FormDataModel = require ('./routes/models/FormData');
-const User = require('./routes/models/User');
-
-
+const express = require("express");
 const app = express();
+const path = require("path");
+const hbs = require("hbs");
+const collection = require("./routes/models/mongodb");
+
+const tempelatePath = path.join(__dirname, "../templates");
+
 app.use(express.json());
-app.use(cors());
+app.set("view engine", "hbs");
+app.set("views", tempelatePath);
+app.use(express.urlencoded({ extended: false }));
 
-mongoose.connect(process.env.mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB Connected'))
-.catch(err => console.log(err));
-
-
-app.post('/api/register', async (req, res) => {
-    const { name, email, password } = req.body;
-  
-    try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) return res.status(409).json({ message: 'User already exists' });
-  
-      const newUser = new User({ name, email, password });
-      await newUser.save();
-  
-      res.status(201).json({ message: 'User registered' });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-
-app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        if (user.password !== password) {
-            return res.status(400).json({ message: 'Incorrect password' });
-        }
-
-        res.status(200).json({ message: 'Login successful' });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+app.get("/", (req, res) => {
+  res.render("login");
+});
+app.get("/signup", (req, res) => {
+  res.render("signup");
 });
 
+app.post("/signup", async (req, res) => {
+  const { name, password } = req.body;
 
-app.listen(3001, () => {
-    console.log("Server listining on http://127.0.0.1:3001");
+  if (password.length < 7) {
+    return res.render("signup", {
+      error: "Password must be at least 7 characters long.",
+    });
+  }
 
+  const data = {
+    name,
+    password,
+  };
+
+  await collection.insertMany([data]);
+
+  res.render("home");
+});
+
+app.all("/login", async (req, res) => {
+  if (req.method === "GET") {
+    res.render("login");
+  } else if (req.method === "POST") {
+    try {
+      const check = await collection.findOne({ name: req.body.name });
+
+      if (check.password === req.body.password) {
+        res.render("home");
+      } else {
+        res.send("Wrong Password!");
+      }
+    } catch {
+      res.send("Wrong Details!");
+    }
+  }
+});
+
+app.get("/logout", (req, res) => {
+  res.redirect("/login");
+});
+
+app.listen(3000, () => {
+  console.log("Port Connected at the following website http://localhost:3000/");
 });
