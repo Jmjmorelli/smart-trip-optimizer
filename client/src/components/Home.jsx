@@ -291,7 +291,7 @@ const HomePage = () => {
               <MapPin size={20} style={{ color: "red", marginRight: "6px" }} />
               <span>Location</span>
             </div>
-            <MapGL
+            {/* <MapGL
               {...viewport}
               width="100%"
               height="300px"
@@ -310,7 +310,7 @@ const HomePage = () => {
                   longitude={selectedLocation.longitude}
                 />
               )}
-            </MapGL>
+            </MapGL> */}
           </div>
         </div>
 
