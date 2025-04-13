@@ -13,6 +13,7 @@ const Home = () => {
   const [itinerary, setItinerary] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const itineraryRef = useRef();
 
   const attractions = [
     { name: "Bakery", type: "food", duration: 60, optional: true },
@@ -26,6 +27,10 @@ const Home = () => {
 
   const generateItinerary = () => {
     setIsGenerating(true);
+
+    const startHour = startTime?.getHours() || 9;
+    const endHour = endTime?.getHours() || 17;
+
     let currentTime = startHour * 60;
     const endTimeInMinutes = endHour * 60;
     const generatedItinerary = [];
@@ -52,7 +57,7 @@ const Home = () => {
     }
 
     setItinerary({
-      
+      date: selectedDate?.toLocaleDateString() || '',
       location: location || 'Paris',
       activities: generatedItinerary,
       startTime: `${startHour}:00${startHour < 12 ? 'AM' : 'PM'}`,
@@ -61,16 +66,18 @@ const Home = () => {
 
     setIsGenerating(false);
 
+    setTimeout(() => {
+      itineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleMapClick = () => {
     setLocation('Paris');
   };
 
-  const handleRedo = async () => {
+  const handleRedo = () => {
     setIsGenerating(true);
-
-
+    setItinerary(null);
     setIsGenerating(false);
   };
 
@@ -83,7 +90,15 @@ const Home = () => {
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <button
           onClick={generateItinerary}
-          style={{ backgroundColor: '#7f4fc3', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+          style={{
+            backgroundColor: '#7f4fc3',
+            color: '#fff',
+            padding: '10px 24px',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}
         >
           generate itinerary
         </button>
@@ -93,7 +108,6 @@ const Home = () => {
         {/* LEFT SIDE */}
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
-            {/* Custom-Styled Inputs */}
             <div style={styles.inputButton}>
               <Calendar size={24} />
               <DatePicker
@@ -158,7 +172,14 @@ const Home = () => {
               <span>Location</span>
             </div>
             <div
-              style={{ height: '300px', backgroundColor: '#eee', borderRadius: '10px', textAlign: 'center', paddingTop: '120px', color: '#666' }}
+              style={{
+                height: '300px',
+                backgroundColor: '#eee',
+                borderRadius: '10px',
+                textAlign: 'center',
+                paddingTop: '120px',
+                color: '#666'
+              }}
               onClick={handleMapClick}
             >
               {location ? (
@@ -182,7 +203,10 @@ const Home = () => {
                   <h2 style={{ margin: 0 }}>{itinerary.location} Itinerary</h2>
                   <p style={{ fontSize: '14px', color: '#666' }}>{itinerary.startTime} - {itinerary.endTime}</p>
                 </div>
-                <button onClick={handleRedo} style={{ border: 'none', background: 'none', color: '#555', cursor: 'pointer' }}>
+                <button
+                  onClick={handleRedo}
+                  style={{ border: 'none', background: 'none', color: '#555', cursor: 'pointer' }}
+                >
                   <RotateCcw size={16} style={{ marginRight: '4px' }} /> redo
                 </button>
               </div>
