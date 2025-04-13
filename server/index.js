@@ -20,7 +20,7 @@ mongoose.connect(process.env.mongoURI, {
 .catch(err => console.log(err));
 
 
-app.post('/api/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
   
     try {
@@ -37,7 +37,7 @@ app.post('/api/register', async (req, res) => {
   });
 
 
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
