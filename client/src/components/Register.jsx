@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register = () => {
     const [name, setName] = useState();
@@ -17,11 +18,17 @@ const Register = () => {
         .then(result => {
             console.log(result);
             if(result.data === "Already registered"){
-                alert("E-mail already registered! Please Login to proceed.");
+                toast.error('❌ E-mail already registered! Please Login to proceed.', {
+                    position: "top-center",
+                    theme: "colored"
+                  });
                 navigate('/login');
             }
             else{
-                alert("Registered successfully! Please Login to proceed.")
+                toast.success('🎉 Registration successful!', {
+                    position: "top-center",
+                    theme: "colored"
+                  });
                 navigate('/login');
             }
             

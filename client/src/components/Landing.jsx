@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ItineraryForm from './ItineraryForm';
+
+
 
 const Landing = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
 
-  // Background style
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const containerStyle = {
     backgroundImage: "url('/images/landing.jpg')",
     backgroundSize: 'cover',
@@ -16,7 +23,6 @@ const Landing = () => {
     alignItems: 'center',
     position: 'relative',
   };
-
 
   const overlayStyle = {
     backgroundColor: '#333',
@@ -49,20 +55,27 @@ const Landing = () => {
   };
 
   return (
-    <div style={containerStyle}>
+    <>
+      <div style={containerStyle}>
         <div style={overlayStyle}>
-            <h1 style={headlineStyle}>Where to next?</h1>
-            <p style={subheadStyle}>create the perfect itinerary here</p>
-            <button
+          <h1 style={headlineStyle}>Where to next?</h1>
+          <p style={subheadStyle}>create the perfect itinerary here</p>
+          <button
             style={buttonStyle}
-            onClick={() => navigate('/Register')}
+            onClick={scrollToForm}
             onMouseEnter={(e) => (e.target.style.background = '#f0f0f0')}
             onMouseLeave={(e) => (e.target.style.background = '#fff')}
-            >
+          >
             Plan Trip
-            </button>
+          </button>
         </div>
-    </div>
+      </div>
+
+      {/* ✨ New form section below hero */}
+      <div ref={formRef} style={{ backgroundColor: '#fff', paddingBottom: '4rem' }}>
+        <ItineraryForm />
+      </div>
+    </>
   );
 };
 
