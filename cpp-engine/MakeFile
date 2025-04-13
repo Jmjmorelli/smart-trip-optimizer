@@ -2,8 +2,8 @@
 
 # Compiler to use
 CXX = g++
-# Compiler flags (adjust as necessary for your project)
-CXXFLAGS = -std=c++11 -Wall
+# Compiler flags 
+CXXFLAGS = -std=c++11 -Wall -I"cpp-engine/vcpkg/installed/x64-windows/include"
 # Target executable
 TARGET = engine
 
@@ -11,12 +11,11 @@ TARGET = engine
 SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 
-# Default target to build the executable
+# Default target
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
     $(CXX) $(CXXFLAGS) -o $@ $^
 
-# Clean up generated files
 clean:
     rm -f $(TARGET) $(OBJ)
