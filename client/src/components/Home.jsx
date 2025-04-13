@@ -58,6 +58,7 @@ const HomePage = () => {
           endTime: endFormatted,
           activity: attraction.name,
           optional: attraction.optional || false,
+          
         });
 
         currentTime += attraction.duration;
@@ -92,17 +93,19 @@ const HomePage = () => {
 
     try {
       const res = await API.post("/generate-itinerary", {
-        location: { // location of home
+        locationInCord: { // location of home
           latitude: 28.419411,
           longitude: -81.581200
         },
+        location: "Orlando, Florida",
         radius: 10, // map radius
         
         startTime: "9:00AM", // hardcoded start time
         endTime: "5:00PM", // hardcoded end time
         budget: { // hard coded budget
-          minimal: 500,
-          maximal: 1000
+          minValue: 500,
+          maxValue: 1000,
+          estimateValue: ""
         },
 
         preference: {
@@ -124,32 +127,307 @@ const HomePage = () => {
   };
 
   return (
-    <div style={{ padding: '80px 40px', textAlign: 'center' }}>
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
-        Welcome to Smart Trip Optimizer
+    <div
+      id="home-page"
+      style={{
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "60px 40px 60px",
+        fontFamily: "Arial",
+      }}
+    >
+      <h1
+        id="page-title"
+        style={{
+          top: "0",
+          textAlign: "center",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          marginBottom: "20px",
+        }}
+      >
+        Let’s start creating the perfect itinerary
       </h1>
 
-      <p style={{ marginTop: '20px', fontSize: '1.2rem' }}>
-        This is the Home Page.
-      </p>
-
-      <button
+      <div
         style={{
-          marginTop: '40px',
-          backgroundColor: '#7f4fc3',
-          color: '#fff',
-          padding: '12px 24px',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "30px",
         }}
-        onClick={() => alert('Button working!')}
+        id="generate-button-container"
       >
-        Generate Itinerary
-      </button>
+        {/* Left side filters */}
+        <div
+          className="filters-wrp"
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+          }}
+        >
+          <button>Select Date</button>
+          <button>Select Time</button>
+          <button>End Time</button>
+          <button>Budget</button>
+        </div>
+
+        {/* Right side generate */}
+        <div className="itenerary-wrp">
+          <button
+            id="generate-itinerary-btn"
+            onClick={generateItinerary}
+            style={{
+              backgroundColor: "#7f4fc3",
+              color: "#fff",
+              padding: "10px 24px",
+              border: "none",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            generate itinerary
+          </button>
+        </div>
+      </div>
+
+      <div id="main-content-wrapper" style={{ display: "flex", gap: "40px" }}>
+        {/* LEFT SIDE */}
+        <div id="left-column" style={{ flex: 1 }}>
+          <div
+            id="input-section"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "20px",
+              marginBottom: "40px",
+              justifyContent: "flex-start",
+            }}
+          >
+            {/* Input Buttons */}
+            <div
+              id="date-picker"
+              style={{
+                ...styles.inputButton,
+                padding: "14px 20px",
+                minWidth: "200px",
+              }}
+              onClick={() => document.getElementById("date-input").showPicker()}
+            >
+              <Calendar size={24} />
+              <span>{selectedDate || "Select Date"}</span>
+              <input
+                id="date-input"
+                type="date"
+                style={{ display: "none" }}
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div>
+
+            <div
+              id="start-time-picker"
+              style={{
+                ...styles.inputButton,
+                padding: "14px 20px",
+                minWidth: "200px",
+              }}
+              onClick={() =>
+                document.getElementById("start-time-input").showPicker()
+              }
+            >
+              <Clock size={24} />
+              <span>
+                {startTime ? formatTimeForDisplay(startTime) : "Start Time"}
+              </span>
+              <input
+                id="start-time-input"
+                type="time"
+                style={{ display: "none" }}
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+              />
+            </div>
+
+            <div
+              id="end-time-picker"
+              style={{
+                ...styles.inputButton,
+                padding: "14px 20px",
+                minWidth: "200px",
+              }}
+              onClick={() =>
+                document.getElementById("end-time-input").showPicker()
+              }
+            >
+              <Clock size={24} />
+              <span>
+                {endTime ? formatTimeForDisplay(endTime) : "End Time"}
+              </span>
+              <input
+                id="end-time-input"
+                type="time"
+                style={{ display: "none" }}
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+              />
+            </div>
+
+            <div
+              id="budget-input-button"
+              style={{
+                ...styles.inputButton,
+                padding: "14px 20px",
+                minWidth: "200px",
+              }}
+              onClick={() => document.getElementById("budget-input").focus()}
+            >
+              <DollarSign size={24} />
+              <span>{budget || "Budget"}</span>
+              <input
+                id="budget-input"
+                type="number"
+                style={{ display: "none" }}
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Map Section */}
+          <div id="map-section" style={{ marginBottom: "10px" }}>
+            <div
+              id="map-header"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "20px",
+              }}
+            >
+              <MapPin size={20} style={{ color: "red", marginRight: "6px" }} />
+              <span>Location</span>
+            </div>
+            <MapGL
+              {...viewport}
+              width="100%"
+              height="300px"
+              mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
+              mapStyle="mapbox://styles/mapbox/streets-v11"
+              onViewportChange={(nextViewport) => setViewport(nextViewport)}
+              onClick={(e) => {
+                const [lng, lat] = e.lngLat;
+                setSelectedLocation({ latitude: lat, longitude: lng });
+                setLocation(`Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`);
+              }}
+            >
+              {selectedLocation && (
+                <Marker
+                  latitude={selectedLocation.latitude}
+                  longitude={selectedLocation.longitude}
+                />
+              )}
+            </MapGL>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div id="itinerary-column" style={{ flex: 1, maxWidth: "400px" }}>
+          {itinerary && (
+            <div
+              id="itinerary-box"
+              style={{
+                backgroundColor: "#fff",
+                padding: "20px",
+                borderRadius: "10px",
+                boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+                marginTop: "40px",
+              }}
+            >
+              <div
+                id="itinerary-header"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div>
+                  <h2 style={{ margin: 0 }}>{itinerary.location} Itinerary</h2>
+                  <p style={{ fontSize: "14px", color: "#666" }}>
+                    {itinerary.startTime} - {itinerary.endTime}
+                  </p>
+                  <p style={{ fontSize: "14px", color: "#666" }}>
+                  {itinerary.estimateValue} - {itinerary.endTime}
+                  </p>
+
+                </div>
+                <button
+                  id="redo-button"
+                  onClick={handleRedo}
+                  style={{
+                    border: "none",
+                    background: "none",
+                    color: "#555",
+                    cursor: "pointer",
+                  }}
+                >
+                  <RotateCcw size={16} style={{ marginRight: "4px" }} /> redo
+                </button>
+              </div>
+              <ul
+                id="itinerary-list"
+                style={{ paddingLeft: "0", listStyle: "none" }}
+              >
+                {itinerary.activities.map((activity, index) => (
+                  <li
+                    key={index}
+                    className="itinerary-item"
+                    style={{
+                      marginBottom: "12px",
+                      display: "flex",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <Clock
+                      size={16}
+                      style={{
+                        marginRight: "8px",
+                        marginTop: "2px",
+                        color: "#aaa",
+                      }}
+                    />
+                    <span>
+                      {activity.startTime} - {activity.endTime}:{" "}
+                      {activity.activity}
+                      {activity.optional && " (optional)"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Home;
+const styles = {
+  inputButton: {
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    padding: "12px 16px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    cursor: "pointer",
+    minWidth: "160px",
+    justifyContent: "center",
+  },
+};
+
+export default HomePage;
