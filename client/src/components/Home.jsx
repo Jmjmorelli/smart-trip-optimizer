@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Calendar, Clock, DollarSign, RotateCcw } from 'lucide-react';
 import API from '../axiosConfig';
 
-const HomePage = () => {
+const Home = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -198,4 +198,4 @@ const styles = {
   }
 };
 
-export default HomePage;
+export default Home;
