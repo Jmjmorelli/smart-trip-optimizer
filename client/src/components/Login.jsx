@@ -20,13 +20,15 @@ const Login = () => {
                 toast.success('🎉 Login successful!', {
                     position: "top-center",
                     theme: "colored"
-                  });
+                });
+                navigate('/home');
             }
             else{
                 toast.error('❌ Invalid credentials!', {
                     position: "top-center",
                     theme: "colored"
                   });
+                navigate('/login');
             }
         })
         .catch(err => console.log(err));

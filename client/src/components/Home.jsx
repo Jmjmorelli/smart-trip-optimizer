@@ -131,8 +131,7 @@ const Home = () => {
                 dateFormat="hh:mm aa"
                 placeholderText="Start Time"
                 className="styled-input"
-                minTime={setHours(setMinutes(new Date(), 0), 6)}
-                maxTime={setHours(setMinutes(new Date(), 0), 22)}
+              
               />
             </div>
 
@@ -148,8 +147,7 @@ const Home = () => {
                 dateFormat="hh:mm aa"
                 placeholderText="End Time"
                 className="styled-input"
-                minTime={setHours(setMinutes(new Date(), 0), 6)}
-                maxTime={setHours(setMinutes(new Date(), 0), 22)}
+             
               />
             </div>
 
