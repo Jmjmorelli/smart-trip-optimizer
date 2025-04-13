@@ -1,64 +1,55 @@
-const express = require("express");
+const cors = require('cors');
+const express = require('express');
+const mongoose = require('mongoose');
+const FormDataModel = require ('./models/FormData');
+
+
 const app = express();
-const path = require("path");
-const hbs = require("hbs");
-const collection = require("./routes/models/mongodb");
-
-const tempelatePath = path.join(__dirname, "../templates");
-
 app.use(express.json());
-app.set("view engine", "hbs");
-app.set("views", tempelatePath);
-app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
-app.get("/", (req, res) => {
-  res.render("login");
-});
-app.get("/signup", (req, res) => {
-  res.render("signup");
-});
+mongoose.connect('mongodb://127.0.0.1:27017/practice_mern');
 
-app.post("/signup", async (req, res) => {
-  const { name, password } = req.body;
+app.post('/register', (req, res)=>{
+    // To post / insert data into database
 
-  if (password.length < 7) {
-    return res.render("signup", {
-      error: "Password must be at least 7 characters long.",
-    });
-  }
+    const {email, password} = req.body;
+    FormDataModel.findOne({email: email})
+    .then(user => {
+        if(user){
+            res.json("Already registered")
+        }
+        else{
+            FormDataModel.create(req.body)
+            .then(log_reg_form => res.json(log_reg_form))
+            .catch(err => res.json(err))
+        }
+    })
+    
+})
 
-  const data = {
-    name,
-    password,
-  };
+app.post('/login', (req, res)=>{
+    // To find record from the database
+    const {email, password} = req.body;
+    FormDataModel.findOne({email: email})
+    .then(user => {
+        if(user){
+            // If user found then these 2 cases
+            if(user.password === password) {
+                res.json("Success");
+            }
+            else{
+                res.json("Wrong password");
+            }
+        }
+        // If user not found then 
+        else{
+            res.json("No records found! ");
+        }
+    })
+})
 
-  await collection.insertMany([data]);
+app.listen(3001, () => {
+    console.log("Server listining on http://127.0.0.1:3001");
 
-  res.render("home");
-});
-
-app.all("/login", async (req, res) => {
-  if (req.method === "GET") {
-    res.render("login");
-  } else if (req.method === "POST") {
-    try {
-      const check = await collection.findOne({ name: req.body.name });
-
-      if (check.password === req.body.password) {
-        res.render("home");
-      } else {
-        res.send("Wrong Password!");
-      }
-    } catch {
-      res.send("Wrong Details!");
-    }
-  }
-});
-
-app.get("/logout", (req, res) => {
-  res.redirect("/login");
-});
-
-app.listen(3000, () => {
-  console.log("Port Connected at the following website http://localhost:3000/");
 });
