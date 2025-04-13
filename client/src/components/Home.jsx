@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Calendar, Clock, DollarSign, RotateCcw } from 'lucide-react';
+import API from '../axiosConfig';
 
 const HomePage = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -71,9 +72,27 @@ const HomePage = () => {
     return `${hour}:${minutes || '00'}${hour < 12 ? 'AM' : 'PM'}`;
   };
 
-  const handleRedo = () => {
-    generateItinerary();
-  };
+  const handleRedo = async () => {
+    // generateItinerary();
+    setIsGenerating(true);
+
+  try {
+    const res = await API.post('/generate-itinerary', {
+      location: "Orlando, Florida",   // hardcoded location
+      startTime: "9:00AM",            // hardcoded start time
+      endTime: "5:00PM"               // hardcoded end time
+    });
+
+    console.log("GPT Response:", res.data);  // See if you get a valid JSON response
+    setItinerary(res.data);
+  } catch (error) {
+    console.error('GPT error:', error);
+    alert('Could not generate itinerary.');
+  }
+
+  setIsGenerating(false);
+};
+
 
   return (
     <div id="home-page" style={{ maxWidth: '1400px', margin: '0 auto', padding: '100px 40px 60px', fontFamily: 'Arial' }}>

@@ -2,6 +2,8 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const FormDataModel = require ('./models/FormData');
+const gptRoute = require('./routes/gpt');
+
 
 const app = express();
 app.use(express.json());
@@ -54,6 +56,8 @@ app.post('/login', (req, res)=>{
         }
     })
 })
+
+app.use('/api', gptRoute);
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
