@@ -31,50 +31,7 @@ const HomePage = () => {
     { name: "Bus back to Airbnb", type: "transport", duration: 30 },
   ];
 
-  const generateItinerary = () => {
-    setIsGenerating(true);
-    const startHour = parseInt(startTime.split(":")[0]);
-    const endHour = parseInt(endTime.split(":")[0]) || 23;
-    let currentTime = startHour * 60;
-    const endTimeInMinutes = endHour * 60;
-    const generatedItinerary = [];
 
-    for (const attraction of attractions) {
-      if (currentTime + attraction.duration <= endTimeInMinutes) {
-        const startHours = Math.floor(currentTime / 60);
-        const startMinutes = currentTime % 60;
-        const endHours = Math.floor((currentTime + attraction.duration) / 60);
-        const endMinutes = (currentTime + attraction.duration) % 60;
-
-        const startFormatted = `${startHours}:${startMinutes
-          .toString()
-          .padStart(2, "0")}${startHours < 12 ? "AM" : "PM"}`;
-        const endFormatted = `${endHours}:${endMinutes
-          .toString()
-          .padStart(2, "0")}${endHours < 12 ? "AM" : "PM"}`;
-
-        generatedItinerary.push({
-          startTime: startFormatted,
-          endTime: endFormatted,
-          activity: attraction.name,
-          optional: attraction.optional || false,
-          
-        });
-
-        currentTime += attraction.duration;
-      }
-    }
-
-    setItinerary({
-      date: selectedDate,
-      location: location || "Paris",
-      activities: generatedItinerary,
-      startTime: `${startHour}:00${startHour < 12 ? "AM" : "PM"}`,
-      endTime: `${endHour}:00${endHour < 12 ? "AM" : "PM"}`,
-    });
-
-    setIsGenerating(false);
-  };
 
   const handleMapClick = () => {
     setLocation("Paris");
