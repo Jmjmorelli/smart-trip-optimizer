@@ -17,9 +17,14 @@ const Navbar = () => {
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
     }}>
       {/* Logo */}
-      <div style={{ fontWeight: 'bold', fontSize: '1.5rem', cursor: 'pointer' }} onClick={() => navigate('/')}>
-        🌍 TripGo
-      </div>
+      <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+      <img
+        src="odysseylogo.png"
+        alt="TripGo "
+        style={{ height: '40px', objectFit: 'contain' }}
+      />
+    </div>
+
 
       {/* Search Bar */}
       <div style={{ flex: 1, margin: '0 2rem', display: 'flex', justifyContent: 'center' }}>
