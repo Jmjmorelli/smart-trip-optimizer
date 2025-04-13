@@ -76,7 +76,7 @@ const HomePage = () => {
   };
 
   return (
-    <div id="home-page" style={{ maxWidth: '1400px', margin: '0 auto', padding: '100px 40px 60px', fontFamily: 'Arial' }}>
+    <div id="home-page" style={{ maxWidth: '1400px', margin: '0 auto', padding: '160px 40px 60px', fontFamily: 'Arial' }}>
       <h1 id="page-title" style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 'bold', marginBottom: '30px' }}>
         Let’s start creating the perfect itinerary
       </h1>
@@ -138,20 +138,24 @@ const HomePage = () => {
 
         {/* RIGHT SIDE */}
         <div id="itinerary-column" style={{ flex: 1, maxWidth: '400px' }}>
-          {itinerary && (
-            <div id="itinerary-box" style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0 0 5px rgba(0,0,0,0.1)', marginTop: '40px' }}>
+          {!itinerary ? (
+            <div style={{ backgroundColor: '#f3f3f3', padding: '30px', borderRadius: '10px', textAlign: 'center', color: '#666' }}>
+              <p style={{ fontSize: '16px', fontStyle: 'italic' }}>Click "generate itinerary" to see your travel plan here.</p>
+            </div>
+          ) : (
+            <div id="itinerary-box" style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0 0 5px rgba(0,0,0,0.1)', marginTop: '10px' }}>
               <div id="itinerary-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <div>
                   <h2 style={{ margin: 0 }}>{itinerary.location} Itinerary</h2>
                   <p style={{ fontSize: '14px', color: '#666' }}>{itinerary.startTime} - {itinerary.endTime}</p>
                 </div>
-                <button id="redo-button" onClick={handleRedo} style={{ border: 'none', background: 'none', color: '#555', cursor: 'pointer' }}>
+                <button onClick={handleRedo} style={{ border: 'none', background: 'none', color: '#555', cursor: 'pointer' }}>
                   <RotateCcw size={16} style={{ marginRight: '4px' }} /> redo
                 </button>
               </div>
-              <ul id="itinerary-list" style={{ paddingLeft: '0', listStyle: 'none' }}>
+              <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
                 {itinerary.activities.map((activity, index) => (
-                  <li key={index} className="itinerary-item" style={{ marginBottom: '12px', display: 'flex', alignItems: 'flex-start' }}>
+                  <li key={index} style={{ marginBottom: '12px', display: 'flex', alignItems: 'flex-start' }}>
                     <Clock size={16} style={{ marginRight: '8px', marginTop: '2px', color: '#aaa' }} />
                     <span>{activity.startTime} - {activity.endTime}: {activity.activity}{activity.optional && ' (optional)'}</span>
                   </li>
