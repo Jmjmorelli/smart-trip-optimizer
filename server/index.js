@@ -3,12 +3,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const FormDataModel = require ('./models/FormData');
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/practice_mern');
+require('dotenv').config();
+
+mongoose.connect(process.env.mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB Connected Successfully!'))
+.catch((err) => console.log('MongoDB Connection Failed:', err));
 
 app.post('/register', (req, res)=>{
     // To post / insert data into database
