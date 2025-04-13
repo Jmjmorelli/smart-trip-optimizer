@@ -25,7 +25,8 @@ jobs:
 
           # Restart backend
           cd server
-          pm2 restart index
+          pm2 restart trip-backend --update-env
+          
 
           # Rebuild frontend
           cd ../client
