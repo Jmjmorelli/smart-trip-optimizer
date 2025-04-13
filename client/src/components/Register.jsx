@@ -22,7 +22,7 @@ const Register = () => {
                     position: "top-center",
                     theme: "colored"
                   });
-                navigate('/login');
+                navigate('/register');
             }
             else{
                 toast.success('🎉 Registration successful!', {
