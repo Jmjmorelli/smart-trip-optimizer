@@ -40,18 +40,30 @@ const HomePage = () => {
     // generateItinerary();
     setIsGenerating(true);
 
-  try {
-    const res = await API.post('/generate-itinerary', {
-      location: {
-        latitude: 28.419411,
-        longitude: -81.581200
-      },   // hardcoded location
-      radius: 10,
-      startTime: "9:00AM",            // hardcoded start time
-      endTime: "5:00PM",
-      
-                     // hardcoded end time
-    });
+
+    try {
+      const res = await API.post("/generate-itinerary", {
+        location: { // location of home
+          latitude: 28.419411,
+          longitude: -81.581200
+        },
+        radius: 10, // map radius
+        
+        startTime: "9:00AM", // hardcoded start time
+        endTime: "5:00PM", // hardcoded end time
+        budget: { // hard coded budget
+          minimal: 500,
+          maximal: 1000
+        },
+
+        preference: {
+          like: "chill, adventure, relax",
+          dislike: "vegan, chinese" 
+
+        }
+
+      });
+
 
     console.log("GPT Response:", res.data);  // See if you get a valid JSON response
     setItinerary(res.data);
