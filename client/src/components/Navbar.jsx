@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import StyledButton from './StyledButton'; // make sure the path matches where you saved the file
+import StyledButton from './StyledButton'; // make sure the path is correct
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  // 🔐 Simulated login state (replace with real auth later)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ Replace this logic with real auth later
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // optional if you store a token
+    setIsLoggedIn(!!token); // convert to true/false
+  }, []);
 
   return (
     <nav style={{
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '1rem 2rem',
+      padding: '0rem 2rem',
       backgroundColor: '#ffffffd9',
       position: 'sticky',
       top: 0,
@@ -19,15 +28,14 @@ const Navbar = () => {
     }}>
       {/* Logo */}
       <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-      <img
-        src="/images/odyssey_logo_trans.png"
-        alt="Odyssey Logo"
-        style={{
-          height: '55px',
-        objectFit: 'contain',
-  }}
-/>
-
+        <img
+          src="/images/odyssey_logo_trans.png"
+          alt="Odyssey Logo"
+          style={{
+            height: '55px',
+            objectFit: 'contain',
+          }}
+        />
       </div>
 
       {/* Search Bar */}
@@ -53,19 +61,30 @@ const Navbar = () => {
           Contact
         </StyledButton>
 
-        <StyledButton
-          onClick={() => navigate('/Login')}
-          variant="secondary"
-        >
-          Sign In
-        </StyledButton>
+        {isLoggedIn ? (
+          <StyledButton
+            onClick={() => navigate('/profile')}
+            variant="primary"
+          >
+            My Profile
+          </StyledButton>
+        ) : (
+          <>
+            <StyledButton
+              onClick={() => navigate('/Login')}
+              variant="secondary"
+            >
+              Sign In
+            </StyledButton>
 
-        <StyledButton
-          onClick={() => navigate('/Register')}
-          variant="primary"
-        >
-          Register
-        </StyledButton>
+            <StyledButton
+              onClick={() => navigate('/Register')}
+              variant="primary"
+            >
+              Register
+            </StyledButton>
+          </>
+        )}
       </div>
     </nav>
   );

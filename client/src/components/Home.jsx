@@ -3,9 +3,8 @@ import { MapPin, Calendar, Clock, DollarSign, RotateCcw } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { setHours, setMinutes } from 'date-fns';
-import API from '../axiosConfig';
 
-const HomePage = () => {
+const Home = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -217,4 +216,4 @@ const styles = {
   }
 };
 
-export default HomePage;
+export default Home;
