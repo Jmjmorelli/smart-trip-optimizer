@@ -58,6 +58,7 @@ const HomePage = () => {
           endTime: endFormatted,
           activity: attraction.name,
           optional: attraction.optional || false,
+          
         });
 
         currentTime += attraction.duration;
@@ -92,17 +93,19 @@ const HomePage = () => {
 
     try {
       const res = await API.post("/generate-itinerary", {
-        location: { // location of home
+        locationInCord: { // location of home
           latitude: 28.419411,
           longitude: -81.581200
         },
+        location: "Orlando, Florida",
         radius: 10, // map radius
         
         startTime: "9:00AM", // hardcoded start time
         endTime: "5:00PM", // hardcoded end time
         budget: { // hard coded budget
-          minimal: 500,
-          maximal: 1000
+          minValue: 500,
+          maxValue: 1000,
+          estimateValue: ""
         },
 
         preference: {
@@ -357,6 +360,10 @@ const HomePage = () => {
                   <p style={{ fontSize: "14px", color: "#666" }}>
                     {itinerary.startTime} - {itinerary.endTime}
                   </p>
+                  <p style={{ fontSize: "14px", color: "#666" }}>
+                  {itinerary.estimateValue} - {itinerary.endTime}
+                  </p>
+
                 </div>
                 <button
                   id="redo-button"

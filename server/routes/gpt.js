@@ -3,19 +3,38 @@ const router = express.Router();
 const axios = require('axios');
 
 router.post('/generate-itinerary', async (req, res) => {
-    const { location, startTime, endTime } = req.body;
+    const {
+        locationInCord,
+        location,
+        radius,
+        startTime,
+        endTime,
+        budget,
+
+        preference
+      } = req.body;
+
+      const { latitude, longitude } = locationInCord;
+      const { minValue, maxValue, estimateValue} = budget;
 
     const prompt = `
-Create a travel itinerary for ${location} from ${startTime} to ${endTime}.
+Create a detailed travel itinerary near coordinates (${latitude}, ${longitude}) within a ${radius}-mile radius of the cordinates.
+The itinerary should start at ${startTime} and end at ${endTime} and can go over the budget $${minValue} but not exceed the $${maxValue}. 
+Give me an Estimate Value of after all Activities has been generated:$${estimateValue}.
+
+
 Respond ONLY in JSON like this:
 {
   "location": "${location}",
   "startTime": "${startTime}",
   "endTime": "${endTime}",
+  "budget: "$${estimateValue}",
+
   "activities": [
     { "startTime": "9:00AM", "endTime": "10:00AM", "activity": "Breakfast at cafe", "optional": false },
     { "startTime": "10:30AM", "endTime": "12:00PM", "activity": "Visit museum", "optional": false }
   ]
+
 }
 `;
 
