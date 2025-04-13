@@ -28,6 +28,7 @@ function App() {
         pauseOnHover
         theme="colored"
       />
+
       </BrowserRouter>
     </div>
   )
