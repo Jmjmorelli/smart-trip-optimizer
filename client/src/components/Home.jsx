@@ -14,7 +14,6 @@ const HomePage = () => {
   const [itinerary, setItinerary] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const itineraryRef = useRef();
 
   const attractions = [
     { name: "Bakery", type: "food", duration: 60, optional: true },
@@ -28,8 +27,6 @@ const HomePage = () => {
 
   const generateItinerary = () => {
     setIsGenerating(true);
-    const startHour = startTime?.getHours();
-    const endHour = endTime?.getHours() || 23;
     let currentTime = startHour * 60;
     const endTimeInMinutes = endHour * 60;
     const generatedItinerary = [];
@@ -56,7 +53,7 @@ const HomePage = () => {
     }
 
     setItinerary({
-      date: selectedDate?.toLocaleDateString() || '',
+      
       location: location || 'Paris',
       activities: generatedItinerary,
       startTime: `${startHour}:00${startHour < 12 ? 'AM' : 'PM'}`,
@@ -65,9 +62,6 @@ const HomePage = () => {
 
     setIsGenerating(false);
 
-    setTimeout(() => {
-      itineraryRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
   };
 
   const handleMapClick = () => {
@@ -77,19 +71,6 @@ const HomePage = () => {
   const handleRedo = async () => {
     setIsGenerating(true);
 
-    try {
-      const res = await API.post('/generate-itinerary', {
-        location: "Orlando, Florida",
-        startTime: "9:00AM",
-        endTime: "5:00PM"
-      });
-
-      console.log("GPT Response:", res.data);
-      setItinerary(res.data);
-    } catch (error) {
-      console.error('GPT error:', error);
-      alert('Could not generate itinerary.');
-    }
 
     setIsGenerating(false);
   };
@@ -137,7 +118,8 @@ const HomePage = () => {
                 dateFormat="hh:mm aa"
                 placeholderText="Start Time"
                 className="styled-input"
-                
+                minTime={setHours(setMinutes(new Date(), 0), 6)}
+                maxTime={setHours(setMinutes(new Date(), 0), 22)}
               />
             </div>
 
@@ -153,7 +135,8 @@ const HomePage = () => {
                 dateFormat="hh:mm aa"
                 placeholderText="End Time"
                 className="styled-input"
-              
+                minTime={setHours(setMinutes(new Date(), 0), 6)}
+                maxTime={setHours(setMinutes(new Date(), 0), 22)}
               />
             </div>
 
