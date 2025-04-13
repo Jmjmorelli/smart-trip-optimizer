@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Calendar, Clock, DollarSign, RotateCcw } from 'lucide-react';
+import { MapPin, Calendar, Clock, DollarSign, RotateCcw, Radius } from 'lucide-react';
 import API from '../axiosConfig';
 
 const HomePage = () => {
@@ -8,6 +8,11 @@ const HomePage = () => {
   const [endTime, setEndTime] = useState('');
   const [budget, setBudget] = useState('');
   const [location, setLocation] = useState('');
+  const [radius, setRadius] = useState(0);
+
+
+
+
   const [itinerary, setItinerary] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -80,7 +85,8 @@ const HomePage = () => {
     const res = await API.post('/generate-itinerary', {
       location: "Orlando, Florida",   // hardcoded location
       startTime: "9:00AM",            // hardcoded start time
-      endTime: "5:00PM"               // hardcoded end time
+      endTime: "5:00PM",// hardcoded end time
+      radius: 25,
     });
 
     console.log("GPT Response:", res.data);  // See if you get a valid JSON response
