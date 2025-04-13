@@ -52,7 +52,7 @@ const Landing = () => {
     <div style={containerStyle}>
         <div style={overlayStyle}>
             <h1 style={headlineStyle}>Where to next?</h1>
-            <p style={subheadStyle}>Create the perfect itinerary here!</p>
+            <p style={subheadStyle}>create the perfect itinerary here</p>
             <button
             style={buttonStyle}
             onClick={() => navigate('/Register')}
