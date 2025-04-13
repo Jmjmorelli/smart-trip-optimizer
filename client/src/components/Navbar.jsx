@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import StyledButton from './StyledButton'; // make sure the path matches where you saved the file
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,12 +20,15 @@ const Navbar = () => {
       {/* Logo */}
       <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
       <img
-        src="odysseylogo.png"
-        alt="TripGo "
-        style={{ height: '40px', objectFit: 'contain' }}
-      />
-    </div>
+        src="/images/odyssey_logo_trans.png"
+        alt="Odyssey Logo"
+        style={{
+          height: '55px',
+        objectFit: 'contain',
+  }}
+/>
 
+      </div>
 
       {/* Search Bar */}
       <div style={{ flex: 1, margin: '0 2rem', display: 'flex', justifyContent: 'center' }}>
@@ -42,9 +46,26 @@ const Navbar = () => {
 
       {/* Navigation Buttons */}
       <div style={{ display: 'flex', gap: '1rem' }}>
-        <button onClick={() => navigate('/Contact')}>Contact</button>
-        <button onClick={() => navigate('/Login')}>Sign In</button>
-        <button onClick={() => navigate('/Register')} style={{ backgroundColor: 'black', color: 'white' }}>Register</button>
+        <StyledButton
+          onClick={() => window.open("https://youtube.com", "_blank")}
+          variant="ghost"
+        >
+          Contact
+        </StyledButton>
+
+        <StyledButton
+          onClick={() => navigate('/Login')}
+          variant="secondary"
+        >
+          Sign In
+        </StyledButton>
+
+        <StyledButton
+          onClick={() => navigate('/Register')}
+          variant="primary"
+        >
+          Register
+        </StyledButton>
       </div>
     </nav>
   );
