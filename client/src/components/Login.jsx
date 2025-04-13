@@ -12,7 +12,7 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         
-        axios.post( 'http://54.82.218.249:3000/register', {email, password})
+        axios.post( 'http://54.82.218.249:3000/login', {email, password})
         .then(result => {
             console.log(result);
             if(result.data === "Success"){
